@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background-color: #0a0a0c;
+}
+
+body {
+  background-color: #0a0a0c;
+  color: #f8fafc;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  font-family: var(--font-sans), Inter, sans-serif;
+}
+
+/* Custom premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a880;
+}
+
+/* Glassmorphism utility card */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 30px rgba(197, 168, 128, 0.04);
+}
+
+/* Custom radial glows for backgrounds - Removed for clean Canvas network */
+
+/* SVG Line dash-array animation for EV routes */
+.route-line {
+  stroke-dasharray: 8 4;
+  animation: routeDash 30s linear infinite;
+}
+
+@keyframes routeDash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Safe areas for mobile devices */
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Utility to disable page scroll when modal is open */
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Custom focus ring styling for accessibility - updated to Crimson red */
+*:focus-visible {
+  outline: 2px solid #B91C1C;
+  outline-offset: 4px;
+}
+
+/* Global transparent theme & bright typography overrides */
+h1, h2, h3, h4, h5, h6 {
+  color: #E8E8E8 !important;
+}
+
+p, span, div, li {
+  /* Elevate body text brightness globally for transparent theme contrast */
+  --tw-text-opacity: 1;
+}
+
+.text-slate-400 {
+  color: #B8C0CC !important; /* Muted silver body */
+}
+
+.text-slate-500 {
+  color: #6B7280 !important; /* Muted gray */
+}
+
+.text-indigo-300 {
+  color: #B91C1C !important; /* Update remaining indigo text highlights to Crimson */
+}
+
+/* Make card containers completely transparent glass panels */
+.glass-panel {
+  background: rgba(3, 5, 10, 0.45) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.glass-panel:hover {
+  border-color: rgba(185, 28, 28, 0.25) !important; /* Subtle Crimson outline on card hover */
+  background: rgba(3, 5, 10, 0.6) !important;
+}
