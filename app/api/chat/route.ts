@@ -135,7 +135,46 @@ A: ${item.answer}
 6. Keep your responses concise, professional, helpful, and friendly.
 `;
 
-    // 1. Prioritize Groq API if available
+    // 1. Prioritize Vercel AI Gateway if configured
+    const vercelAiKey = process.env.VERCEL_AI_API_KEY;
+    if (vercelAiKey && !vercelAiKey.includes("your_")) {
+      try {
+        const formattedHistory = (history || [])
+          .filter((msg: any) => msg.role !== "system" && msg.content && msg.id !== "welcome")
+          .map((msg: any) => ({
+            role: msg.role === "assistant" ? "assistant" : "user",
+            content: msg.content,
+          }));
+
+        const response = await fetch("https://ai-gateway.vercel.sh/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${vercelAiKey}`,
+          },
+          body: JSON.stringify({
+            model: process.env.VERCEL_AI_MODEL || "openai/gpt-4o-mini",
+            messages: [
+              { role: "system", content: systemInstruction },
+              ...formattedHistory,
+              { role: "user", content: message }
+            ],
+            temperature: 0.2,
+          }),
+        });
+
+        const data = await response.json();
+        if (response.ok && data.choices?.[0]?.message?.content) {
+          return NextResponse.json({ response: data.choices[0].message.content });
+        }
+        
+        console.error("Vercel AI Gateway error response:", data);
+      } catch (err) {
+        console.error("Vercel AI Gateway Execution Error, falling back:", err);
+      }
+    }
+
+    // 2. Prioritize Groq API if available
     const groqKey = process.env.GROQ_API_KEY;
     if (groqKey && !groqKey.includes("your_")) {
       try {
