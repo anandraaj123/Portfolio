@@ -71,7 +71,7 @@ export default function Experience() {
                 <div className={`absolute -left-[41px] top-1.5 w-6 h-6 rounded-full border-2 flex items-center justify-center bg-[#080b12] z-10 transition-colors duration-300 ${
                   item.isCurrent ? "border-primary text-primary" : "border-slate-600 text-slate-500"
                 }`}>
-                  {idx === 1 ? <GraduationCap className="w-3.5 h-3.5" /> : <Calendar className="w-3.5 h-3.5" />}
+                  {item.title.includes("B.TECH") ? <GraduationCap className="w-3.5 h-3.5" /> : <Calendar className="w-3.5 h-3.5" />}
                 </div>
 
                 {/* Timeline date/period */}
