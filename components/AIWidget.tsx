@@ -14,11 +14,11 @@ export default function AIWidget() {
   const chatPanelRef = useRef<HTMLDivElement>(null);
 
   const suggestedPrompts = [
-    "What does Anand build?",
     "Tell me about NAVi",
-    "What are Anand's strongest skills?",
+    "What are Anand's core skills?",
     "Why should I hire Anand?",
-    "Tell me something interesting"
+    "How can I contact Anand?",
+    "What is Anand's background?"
   ];
 
   // Initialize with greeting
@@ -27,7 +27,7 @@ export default function AIWidget() {
       {
         id: "welcome",
         role: "assistant",
-        content: "Hi! I'm Spidey, Anand's AI assistant. Ask me anything about my projects, skills, or studies!\n\nMay I help you?",
+        content: "Hi! I'm Spidey, Anand's personal AI assistant. 🕷️\n\nAsk me anything about Anand's projects (like NAVi), tech stack, education, or how to reach out!\n\nHow can I help you today?",
         timestamp: new Date()
       }
     ]);

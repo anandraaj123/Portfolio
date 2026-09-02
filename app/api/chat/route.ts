@@ -31,29 +31,7 @@ function checkChatRateLimit(ip: string, limit: number, windowMs: number): boolea
   return false;
 }
 
-// Fallback logic for local development if GEMINI_API_KEY is not defined
-function getLocalMockResponse(message: string): string {
-  const query = message.toLowerCase().trim();
-  if (query.includes("navi") || query.includes("ev") || query.includes("navigation")) {
-    return "NAVi is Anand's flagship project: an AI/ML Based Intelligent EV Navigation & Route Optimization System. The system models battery drainage by analyzing elevation changes, speed limits, and traffic, then automatically plans route stops at charging stations to minimize travel time and eliminate range anxiety.";
-  }
-  if (query.includes("skills") || query.includes("tech") || query.includes("languages") || query.includes("stack")) {
-    return "Anand's primary tech stack is:\n\n" +
-           "• Programming: Java, Python\n" +
-           "• Mobile & Frontend: React, React Native, Next.js, HTML, CSS\n" +
-           "• Backend: Node.js, REST APIs, Firebase, Firestore\n" +
-           "• Database: SQL, Data Structures & Algorithms\n" +
-           "• AI / ML: Machine Learning, AI APIs, LLM Applications, AI Agents\n" +
-           "• Tools: Git, GitHub, VS Code";
-  }
-  if (query.includes("who is") || query.includes("anand") || query.includes("about") || query.includes("profile")) {
-    return "Anand Kumar is a 3rd-year B.Tech Computer Science and Engineering student. He is a software developer, and AI & Mobile Application Builder, focusing on creating real, practical software applications that bridge code, AI models, and modern UX.";
-  }
-  if (query.includes("contact") || query.includes("email") || query.includes("reach") || query.includes("connect")) {
-    return "You can reach out to Anand directly at anandkumar.work@gmail.com, connect with him via LinkedIn, or check out his GitHub at https://github.com/anandraaj123.";
-  }
-  return "I don't have that information. Anand's portfolio only covers his core engineering skills, academic studies, NAVi flagship project, and contact info.";
-}
+import { getChatFallbackResponse } from "@/lib/chatFallback";
 
 export async function POST(req: Request) {
   try {
@@ -243,16 +221,15 @@ A: ${item.answer}
       }
     }
 
-    // 3. Fallback to local simulated mock response
-    console.warn("All live LLM API keys failed or are missing. Using local simulated responses.");
-    const mockReply = getLocalMockResponse(message);
-    return NextResponse.json({ response: mockReply });
+    // 3. Fallback to comprehensive local knowledge response
+    console.warn("Live LLM APIs unavailable or not configured. Using local fallback engine.");
+    const fallbackReply = getChatFallbackResponse(message);
+    return NextResponse.json({ response: fallbackReply });
 
   } catch (error) {
     console.error("Chat API Error:", error);
-    return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
-      { status: 500 }
-    );
+    // Even if an unexpected error occurs, provide the fallback response instead of failing
+    const fallbackReply = getChatFallbackResponse("help");
+    return NextResponse.json({ response: fallbackReply });
   }
 }

@@ -1,3 +1,5 @@
+import { getChatFallbackResponse } from "@/lib/chatFallback";
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -8,6 +10,7 @@ export interface ChatMessage {
 export class AIService {
   /**
    * Sends a message to the AI assistant via Next.js Route Handler /api/chat.
+   * If network or server fails, automatically resolves using the local fallback engine.
    */
   static async sendMessage(
     message: string,
@@ -29,16 +32,19 @@ export class AIService {
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch response from server");
+      if (response.ok && data?.response) {
+        return data.response;
       }
 
-      return data.response;
+      // If server returned an error, fallback gracefully
+      console.warn("Server API returned error or empty response. Using client-side fallback.");
+      return getChatFallbackResponse(message);
     } catch (error: any) {
-      console.error("AIService.sendMessage failed:", error);
-      throw error;
+      console.warn("AIService network request failed. Falling back to local offline engine:", error);
+      // Graceful client fallback without breaking the user experience
+      return getChatFallbackResponse(message);
     }
   }
 }
